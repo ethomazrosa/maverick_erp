@@ -16,8 +16,8 @@ function ResponsibleCompany() {
     const [loading, setLoading] = useState(true)
     const [openConfirmation, setOpenConfirmation] = useState(false)
     const [selectedCompany, setSelectedCompany] = useState(null)
-    const getResponsibleCompanies = useGet('http://127.0.0.1:8000/registrations/responsible_companies/')
-    const deleteResponsibleCompany = useDelete(`http://127.0.0.1:8000/registrations/responsible_companies/${selectedCompany}/`)
+    const getResponsibleCompanies = useGet('/api/registrations/responsible_companies/')
+    const deleteResponsibleCompany = useDelete(`/api/registrations/responsible_companies/${selectedCompany}/`)
     const [responsibleCompanies, setResponsibleCompanies] = useState([])
 
     useEffect(() => {

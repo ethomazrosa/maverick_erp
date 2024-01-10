@@ -14,7 +14,7 @@ function DrawerMenu() {
     const [anchorElUser, setAnchorElUser] = useState(null)
     const [userCookie] = useCookies([Constants.ID_USER_COOKIE])
     const userId = userCookie[Constants.ID_USER_COOKIE]
-    const getProfile = useGet(`http://127.0.0.1:8000/users/profiles/${userId}/`)
+    const getProfile = useGet(`/api/users/profiles/${userId}/`)
     const [profile_picture, setProfilePicture] = useState('')
 
     function handleOpenUserMenu(event) {

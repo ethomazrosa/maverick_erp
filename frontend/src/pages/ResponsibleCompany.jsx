@@ -17,9 +17,9 @@ function ResponsibleCompany() {
     const [formData, setFormData] = useState({})
     const [errorMessage, setErrorMessage] = useState('')
     const [openSnackbar, setOpenSnackbar] = useState(false)
-    const getResponsibleCompany = useGet(`http://127.0.0.1:8000/registrations/responsible_companies/${params.id}/`)
-    const putResponsibleCompany = usePut(`http://127.0.0.1:8000/registrations/responsible_companies/${params.id}/`, true)
-    const postResponsibleCompany = usePost(`http://127.0.0.1:8000/registrations/responsible_companies/`, true)
+    const getResponsibleCompany = useGet(`/api/registrations/responsible_companies/${params.id}/`)
+    const putResponsibleCompany = usePut(`/api/registrations/responsible_companies/${params.id}/`, true)
+    const postResponsibleCompany = usePost(`/api/registrations/responsible_companies/`, true)
 
     function handleChange(e) {
         setFormData({ ...formData, [e.target.name]: e.target.value })

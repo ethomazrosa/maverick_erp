@@ -14,8 +14,8 @@ function Auth() {
     // eslint-disable-next-line
     const [token, setToken] = useCookies([Constants.TOKEN_NAME_COOKIE])
     const [errorMessage, setErrorMessage] = useState('')
-    const postLogin = usePost('http://127.0.0.1:8000/auth/', false, true)
-    const getCurrentUser = useGet('http://127.0.0.1:8000/users/current_user/')
+    const postLogin = usePost('/api/auth/', false, true)
+    const getCurrentUser = useGet('/api/users/current_user/')
 
     function handleSubmit(event) {
         event.preventDefault()

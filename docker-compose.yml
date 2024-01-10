@@ -12,8 +12,8 @@ services:
       dockerfile: Dockerfile.dev
     env_file:
       - ./.env.dev
-    ports:
-      - '8000:8000'
+    expose:
+      - 8000
     volumes:
       - ./backend:/backend
     depends_on:
@@ -22,12 +22,19 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.dev
-    ports:
-      - '3000:3000'
+    expose:
+      - 3000
     volumes:
       - /frontend/node_modules
       - ./frontend:/frontend
     depends_on:
       - backend
+  nginx:
+    restart: always
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile.dev
+    ports:
+      - 1337:80
 volumes:
   postgres_data:

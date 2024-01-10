@@ -44,10 +44,10 @@ function Product() {
     const [loading, setLoading] = useState(true)
     const [product, setProduct] = useState(emptyProduct)
     const [openConfirmation, setOpenConfirmation] = useState(false)
-    const getProduct = useGet(`http://127.0.0.1:8000/registrations/products/${params.id}/`)
-    const putProduct = usePut(`http://127.0.0.1:8000/registrations/products/${params.id}/`)
-    const postProduct = usePost(`http://127.0.0.1:8000/registrations/products/`)
-    const deleteProduct = useDelete(`http://127.0.0.1:8000/registrations/products/${params.id}/`)
+    const getProduct = useGet(`/api/registrations/products/${params.id}/`)
+    const putProduct = usePut(`/api/registrations/products/${params.id}/`)
+    const postProduct = usePost(`/api/registrations/products/`)
+    const deleteProduct = useDelete(`/api/registrations/products/${params.id}/`)
     const formik = useFormik({
         initialValues: product,
         enableReinitialize: true,

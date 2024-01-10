@@ -33,10 +33,10 @@ function Service() {
     const [loading, setLoading] = useState(true)
     const [service, setService] = useState(emptyService)
     const [openConfirmation, setOpenConfirmation] = useState(false)
-    const getService = useGet(`http://127.0.0.1:8000/registrations/services/${params.id}/`)
-    const putService = usePut(`http://127.0.0.1:8000/registrations/services/${params.id}/`)
-    const postService = usePost(`http://127.0.0.1:8000/registrations/services/`)
-    const deleteService = useDelete(`http://127.0.0.1:8000/registrations/services/${params.id}/`)
+    const getService = useGet(`/api/registrations/services/${params.id}/`)
+    const putService = usePut(`/api/registrations/services/${params.id}/`)
+    const postService = usePost(`/api/registrations/services/`)
+    const deleteService = useDelete(`/api/registrations/services/${params.id}/`)
     const formik = useFormik({
         initialValues: service,
         enableReinitialize: true,

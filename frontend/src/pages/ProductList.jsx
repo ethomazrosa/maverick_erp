@@ -13,7 +13,7 @@ function ProductList() {
 
     const navigate = useNavigate()
     const [loading, setLoading] = useState(true)
-    const getProducts = useGet('http://127.0.0.1:8000/registrations/products/')
+    const getProducts = useGet('/api/registrations/products/')
     const [products, setProducts] = useState([])
 
     const columns = [

@@ -94,10 +94,10 @@ function Customer() {
     const [loading, setLoading] = useState(true)
     const [customer, setCustomer] = useState(emptyCustomer)
     const [openConfirmation, setOpenConfirmation] = useState(false)
-    const getCustomer = useGet(`http://127.0.0.1:8000/registrations/customers/${params.id}/`)
-    const putCustomer = usePut(`http://127.0.0.1:8000/registrations/customers/${params.id}/`)
-    const postCustomer = usePost(`http://127.0.0.1:8000/registrations/customers/`)
-    const deleteCustomer = useDelete(`http://127.0.0.1:8000/registrations/customers/${params.id}/`)
+    const getCustomer = useGet(`/api/registrations/customers/${params.id}/`)
+    const putCustomer = usePut(`/api/registrations/customers/${params.id}/`)
+    const postCustomer = usePost(`/api/registrations/customers/`)
+    const deleteCustomer = useDelete(`/api/registrations/customers/${params.id}/`)
     const formik = useFormik({
         initialValues: customer,
         enableReinitialize: true,

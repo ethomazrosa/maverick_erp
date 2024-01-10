@@ -2,3 +2,4 @@
 
 maverick_env
 .env.dev
+.env.prd

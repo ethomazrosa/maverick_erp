@@ -40,7 +40,7 @@ function ServiceList() {
 
     const navigate = useNavigate()
     const [loading, setLoading] = useState(true)
-    const getServices = useGet('http://127.0.0.1:8000/registrations/services/')
+    const getServices = useGet('/api/registrations/services/')
     const [services, setServices] = useState([])
 
     useEffect(() => {

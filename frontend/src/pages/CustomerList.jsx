@@ -13,7 +13,7 @@ function CustomerList() {
 
     const navigate = useNavigate()
     const [loading, setLoading] = useState(true)
-    const getCustomers = useGet('http://127.0.0.1:8000/registrations/customers/')
+    const getCustomers = useGet('/api/registrations/customers/')
     const [customers, setCustomers] = useState([])
 
     const columns = [
