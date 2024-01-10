@@ -2,22 +2,16 @@ version: '3'
 services:
   database:
     image: postgres:16
-    environment:
-        - POSTGRES_PASSWORD=postgrespassword
-        - POSTGRES_USER=postgresuser
-        - POSTGRES_DB=postgresdb
+    env_file:
+      - ./.env.dev
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile.dev
-    environment:
-      - DJANGO_SECRET_KEY=django-insecure-npiw)m2=8#nazx+hssjg^kh%df^0j9ri6v!5la#4@gea@t+m&9
-      - DJANGO_DEBUG=True
-      - POSTGRES_NAME=postgresdb
-      - POSTGRES_USER=postgresuser
-      - POSTGRES_PASSWORD=postgrespassword
-      - POSTGRES_HOST=database
-      - POSTGRES_PORT=5432
+    env_file:
+      - ./.env.dev
     ports:
       - '8000:8000'
     volumes:
@@ -35,3 +29,5 @@ services:
       - ./frontend:/frontend
     depends_on:
       - backend
+volumes:
+  postgres_data:
