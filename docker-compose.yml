@@ -4,6 +4,9 @@ services:
     image: "ethomazrosa/maverick_backend"
     mem_limit: 512m
     hostname: backend
+    volumes:
+      - static_volume:/backend/djangostatic
+      - media_volume:/backend/djangomedia
     environment:
       - DJANGO_SECRET_KEY=$DJANGO_SECRET_KEY
       - DJANGO_DEBUG=$DJANGO_DEBUG
@@ -25,5 +28,11 @@ services:
     image: "ethomazrosa/maverick_nginx"
     mem_limit: 128m
     hostname: nginx
+    volumes:
+      - static_volume:/backend/djangostatic
+      - media_volume:/backend/djangomedia
     ports:
       - "80:80"
+volumes:
+  static_volume:
+  media_volume:
