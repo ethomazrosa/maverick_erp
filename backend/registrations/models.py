@@ -34,12 +34,12 @@ class Address(models.Model):
         TO = "TO", _("Tocantins")
 
     address_name = models.CharField(max_length=250)
-    address_number = models.SmallIntegerField()
+    address_number = models.PositiveIntegerField()
     address_complement = models.CharField(max_length=250, blank=True, null=True)
     neighborhood = models.CharField(max_length=250)
     city = models.CharField(max_length=250)
     state = models.CharField(max_length=2, choices=State.choices)
-    postal_code = models.SmallIntegerField()
+    postal_code = models.PositiveIntegerField()
 
     class Meta:
         abstract = True
@@ -47,19 +47,19 @@ class Address(models.Model):
 
 class ContactInformation(models.Model):
     email = models.EmailField()
-    phone = models.SmallIntegerField(blank=True, null=True)
-    mobile_phone = models.SmallIntegerField()
+    phone = models.PositiveBigIntegerField(blank=True, null=True)
+    mobile_phone = models.PositiveBigIntegerField()
 
     class Meta:
         abstract = True
 
 
 class ResponsibleCompany(Address, ContactInformation):
-    identification_number = models.PositiveSmallIntegerField(unique=True)
+    identification_number = models.PositiveBigIntegerField(unique=True)
     company_name = models.CharField(max_length=250)
     brand_name = models.CharField(max_length=250)
-    municipal_registration = models.PositiveSmallIntegerField(blank=True, null=True)
-    state_registration = models.PositiveSmallIntegerField(blank=True, null=True)
+    municipal_registration = models.PositiveBigIntegerField(blank=True, null=True)
+    state_registration = models.PositiveBigIntegerField(blank=True, null=True)
     color = models.CharField(max_length=10)
     logo = models.ImageField(upload_to="company_logos/%Y/%m/%d/", blank=True, null=True)
 
@@ -70,7 +70,7 @@ class ResponsibleCompany(Address, ContactInformation):
 class Product(models.Model):
     name = models.CharField(max_length=50, unique=True)
     description = models.TextField(max_length=1000)
-    ncm_naladish = models.PositiveSmallIntegerField(blank=True, null=True)
+    ncm_naladish = models.PositiveIntegerField(blank=True, null=True)
     o_cst = models.PositiveSmallIntegerField(blank=True, null=True)
     cfop = models.PositiveSmallIntegerField(blank=True, null=True)
     measurement_unit = models.CharField(max_length=25, blank=True, null=True)
@@ -113,12 +113,12 @@ class Customer(Address, ContactInformation):
     person_type = models.CharField(
         max_length=2, choices=PersonType.choices, default=PersonType.PJ
     )
-    identification_number = models.PositiveSmallIntegerField(unique=True)
+    identification_number = models.PositiveBigIntegerField(unique=True)
     name = models.CharField(max_length=250, blank=True, null=True)
     company_name = models.CharField(max_length=250, blank=True, null=True)
     brand_name = models.CharField(max_length=250, blank=True, null=True)
-    municipal_registration = models.PositiveSmallIntegerField(blank=True, null=True)
-    state_registration = models.PositiveSmallIntegerField(blank=True, null=True)
+    municipal_registration = models.PositiveBigIntegerField(blank=True, null=True)
+    state_registration = models.PositiveBigIntegerField(blank=True, null=True)
 
     def __str__(self) -> str:
         if self.person_type == "PF":

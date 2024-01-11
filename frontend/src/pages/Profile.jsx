@@ -8,6 +8,22 @@ import { useNavigate } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
 import { Constants } from '../utils/constants'
 import { ProgressBar } from '../components'
+import { useFormik } from 'formik'
+import { object, string } from 'yup'
+import { PatternFormat } from 'react-number-format'
+
+const validationSchema = object({
+    identification_number: string().required('Por favor preencha o CPF.'),
+    phone_number: string().required('Por favor preencha o telefone.')
+})
+
+const emptyProfile = {
+    id: '',
+    identification_number: '',
+    phone_number: '',
+    profile_picture: '',
+    employee: ''
+}
 
 function Profile() {
 
@@ -17,22 +33,44 @@ function Profile() {
     const userFirstName = userCookie[Constants.FIRST_NAME_COOKIE]
     const userLastname = userCookie[Constants.LAST_NAME_COOKIE]
     const [loading, setLoading] = useState(true)
-    const [formData, setFormData] = useState({})
+    const [profile, setProfile] = useState(emptyProfile)
     const putProfile = usePut(`/api/users/profiles/${userId}/`, true)
     const getProfile = useGet(`/api/users/profiles/${userId}/`)
-
-    function handleChange(e) {
-        setFormData({ ...formData, [e.target.name]: e.target.value })
-    }
-
-    function handleImage(e) {
-        setFormData({ ...formData, [e.target.name]: e.target.files[0] })
-    }
+    const formik = useFormik({
+        initialValues: profile,
+        enableReinitialize: true,
+        validationSchema: validationSchema,
+        onSubmit: (values) => {
+            setLoading(true)
+            if (typeof profile.profile_picture === 'string' || profile.profile_picture === null) {
+                const { profile_picture, ...noPicture } = values
+                putProfile(noPicture)
+                    .then(response => {
+                        setLoading(false)
+                        navigate('/')
+                    })
+                    .catch(error => {
+                        console.log(error.response.data)
+                        setLoading(false)
+                    })
+            } else {
+                putProfile(values)
+                    .then(response => {
+                        setLoading(false)
+                        navigate('/')
+                    })
+                    .catch(error => {
+                        console.log(error.response.data)
+                        setLoading(false)
+                    })
+            }
+        }
+    })
 
     useEffect(() => {
         getProfile()
             .then(response => {
-                setFormData(response)
+                setProfile(response)
                 setLoading(false)
             })
             .catch(error => {
@@ -42,31 +80,8 @@ function Profile() {
         // eslint-disable-next-line
     }, [])
 
-    function handleSubmit(event) {
-        event.preventDefault()
-        setLoading(true)
-        if (typeof formData.profile_picture === 'string' || formData.profile_picture === null) {
-            const { profile_picture, ...noPicture } = formData
-            putProfile(noPicture)
-                .then(response => {
-                    setLoading(false)
-                    navigate('/')
-                })
-                .catch(error => {
-                    console.log(error.response.data)
-                    setLoading(false)
-                })
-        } else {
-            putProfile(formData)
-                .then(response => {
-                    setLoading(false)
-                    navigate('/')
-                })
-                .catch(error => {
-                    console.log(error.response.data)
-                    setLoading(false)
-                })
-        }
+    function handleImage(e) {
+        setProfile({ ...profile, [e.target.name]: e.target.files[0] })
     }
 
     if (loading) {
@@ -81,66 +96,73 @@ function Profile() {
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
-                        padding: '2rem'
+                        padding: '2rem',
+                        gap: 2
                     }}
                 >
                     <Typography component='h1' variant='h5'>
                         Perfil de {userFirstName + ' ' + userLastname}
                     </Typography>
-                    <Box component='form' onSubmit={handleSubmit} sx={{ mt: 1, width: '100%' }}>
+                    <Box component='form' id='form' onSubmit={formik.handleSubmit}>
                         <Grid container>
                             <Grid item xs={12} sm={6} textAlign='center'>
                                 <IconButton color='primary' aria-label='upload picture' component='label'>
                                     <input hidden accept='image/*' type='file' name='profile_picture' onChange={handleImage} />
                                     <Avatar
                                         alt=''
-                                        src={formData.profile_picture}
+                                        src={profile.profile_picture}
                                         sx={{
                                             width: {
-                                                xs: '10rem',
-                                                md: '12rem'
+                                                xs: '11rem',
+                                                md: '13rem'
                                             },
                                             height: {
-                                                xs: '10rem',
-                                                md: '12rem'
+                                                xs: '11rem',
+                                                md: '13rem'
                                             }
                                         }}
                                     />
                                 </IconButton>
                             </Grid>
-                            <Grid item xs={12} sm={6} >
-                                <TextField
-                                    margin='normal'
-                                    required
-                                    fullWidth
-                                    id='identification_number'
-                                    label='CPF'
-                                    name='identification_number'
-                                    type='number'
-                                    autoFocus
-                                    // disabled
-                                    value={formData.identification_number || ''}
-                                    onChange={handleChange}
-                                />
-                                <TextField
-                                    margin='normal'
-                                    required
-                                    fullWidth
-                                    id='phone_number'
-                                    label='Telefone'
-                                    name='phone_number'
-                                    type='number'
-                                    value={formData.phone_number || ''}
-                                    onChange={handleChange}
-                                />
-                                <Button
-                                    type='submit'
-                                    fullWidth
-                                    variant='contained'
-                                    sx={{ mt: 2 }}
-                                >
-                                    Atualizar
-                                </Button>
+                            <Grid item xs={12} sm={6}>
+                                <Grid container spacing={1}>
+                                    <Grid item xs={12}>
+                                        <PatternFormat
+                                            id='identification_number'
+                                            label='CPF'
+                                            fullWidth
+                                            customInput={TextField}
+                                            format='###.###.###-##'
+                                            mask='_'
+                                            //autoFocus
+                                            onValueChange={v => formik.setFieldValue('identification_number', v.floatValue)}
+                                            onBlur={formik.handleBlur}
+                                            value={formik.values.identification_number}
+                                            error={formik.touched.identification_number && Boolean(formik.errors.identification_number)}
+                                            helperText={formik.touched.identification_number && formik.errors.identification_number}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <PatternFormat
+                                            id='phone_number'
+                                            label='Telefone'
+                                            fullWidth
+                                            customInput={TextField}
+                                            format='(##) ##### ####'
+                                            mask='_'
+                                            onValueChange={v => formik.setFieldValue('phone_number', v.floatValue)}
+                                            onBlur={formik.handleBlur}
+                                            value={formik.values.phone_number}
+                                            error={formik.touched.phone_number && Boolean(formik.errors.phone_number)}
+                                            helperText={formik.touched.phone_number && formik.errors.phone_number}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Button form='form' type='submit' fullWidth variant='contained'>
+                                            Atualizar
+                                        </Button>
+                                    </Grid>
+                                </Grid>
                             </Grid>
                         </Grid>
                     </Box>
