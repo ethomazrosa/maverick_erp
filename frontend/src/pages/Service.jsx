@@ -156,7 +156,7 @@ function Service() {
                                 fixedDecimalScale
                                 prefix='R$ '
                                 allowNegative={false}
-                                onValueChange={v => formik.setFieldValue('price', v.floatValue)}
+                                onValueChange={v => formik.setFieldValue('price', v.floatValue ?? '')}
                                 onBlur={formik.handleBlur}
                                 value={formik.values.price}
                                 error={formik.touched.price && Boolean(formik.errors.price)}

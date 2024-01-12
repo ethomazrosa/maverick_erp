@@ -135,7 +135,7 @@ function Profile() {
                                             format='###.###.###-##'
                                             mask='_'
                                             //autoFocus
-                                            onValueChange={v => formik.setFieldValue('identification_number', v.floatValue)}
+                                            onValueChange={v => formik.setFieldValue('identification_number', v.floatValue ?? '')}
                                             onBlur={formik.handleBlur}
                                             value={formik.values.identification_number}
                                             error={formik.touched.identification_number && Boolean(formik.errors.identification_number)}
@@ -150,7 +150,7 @@ function Profile() {
                                             customInput={TextField}
                                             format='(##) ##### ####'
                                             mask='_'
-                                            onValueChange={v => formik.setFieldValue('phone_number', v.floatValue)}
+                                            onValueChange={v => formik.setFieldValue('phone_number', v.floatValue ?? '')}
                                             onBlur={formik.handleBlur}
                                             value={formik.values.phone_number}
                                             error={formik.touched.phone_number && Boolean(formik.errors.phone_number)}

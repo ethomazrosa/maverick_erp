@@ -19,7 +19,7 @@ const validationSchema = object({
     // company_name: string().required('Por favor preencha o nome fantasia.'),
     // brand_name: string().required('Por favor preencha a razão social.'),
     identification_number: string().required('Por favor preencha o CPF/CNPJ.'),
-    email: string().required('Por favor preencha o email.'),
+    email: string().email('Por favor preencha um email válido').required('Por favor preencha o email.'),
     mobile_phone: string().required('Por favor preencha o telefone celular.'),
     address_name: string().required('Por favor preencha o endereço.'),
     address_number: string().required('Por favor preencha o número.'),
@@ -212,7 +212,7 @@ function Customer() {
                                 customInput={TextField}
                                 format={formik.values.person_type === 'PF' ? '###.###.###-##' : '##.###.###/####-##'}
                                 mask='_'
-                                onValueChange={v => formik.setFieldValue('identification_number', v.floatValue)}
+                                onValueChange={v => formik.setFieldValue('identification_number', v.floatValue ?? '')}
                                 onBlur={formik.handleBlur}
                                 value={formik.values.identification_number}
                                 error={formik.touched.identification_number && Boolean(formik.errors.identification_number)}
@@ -292,7 +292,7 @@ function Customer() {
                                 customInput={TextField}
                                 format='(##) ####-####'
                                 mask='_'
-                                onValueChange={v => formik.setFieldValue('phone', v.floatValue)}
+                                onValueChange={v => formik.setFieldValue('phone', v.floatValue ?? '')}
                                 onBlur={formik.handleBlur}
                                 value={formik.values.phone}
                             />
@@ -305,7 +305,7 @@ function Customer() {
                                 customInput={TextField}
                                 format='(##) #####-####'
                                 mask='_'
-                                onValueChange={v => formik.setFieldValue('mobile_phone', v.floatValue)}
+                                onValueChange={v => formik.setFieldValue('mobile_phone', v.floatValue ?? '')}
                                 onBlur={formik.handleBlur}
                                 value={formik.values.mobile_phone}
                                 error={formik.touched.mobile_phone && Boolean(formik.errors.mobile_phone)}
@@ -332,7 +332,7 @@ function Customer() {
                                 decimalSeparator=','
                                 decimalScale={0}
                                 allowNegative={false}
-                                onValueChange={v => formik.setFieldValue('address_number', v.floatValue)}
+                                onValueChange={v => formik.setFieldValue('address_number', v.floatValue ?? '')}
                                 onBlur={formik.handleBlur}
                                 value={formik.values.address_number}
                                 error={formik.touched.address_number && Boolean(formik.errors.address_number)}
@@ -399,7 +399,7 @@ function Customer() {
                                 customInput={TextField}
                                 format='#####-###'
                                 mask='_'
-                                onValueChange={v => formik.setFieldValue('postal_code', v.floatValue)}
+                                onValueChange={v => formik.setFieldValue('postal_code', v.floatValue ?? '')}
                                 onBlur={formik.handleBlur}
                                 value={formik.values.postal_code}
                                 error={formik.touched.postal_code && Boolean(formik.errors.postal_code)}
