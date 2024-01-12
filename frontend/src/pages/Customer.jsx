@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import {
     Typography, Toolbar, IconButton, TextField, Dialog, DialogTitle,
-    Box, Container, Grid, DialogActions, Button, Autocomplete,
+    Box, Container, Grid, DialogActions, Button, Autocomplete, Snackbar,
+    Alert,
 } from '@mui/material'
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined'
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
@@ -92,6 +93,8 @@ function Customer() {
     const params = useParams()
     const navigate = useNavigate()
     const [loading, setLoading] = useState(true)
+    const [errorMessage, setErrorMessage] = useState('')
+    const [openSnackbar, setOpenSnackbar] = useState(false)
     const [customer, setCustomer] = useState(emptyCustomer)
     const [openConfirmation, setOpenConfirmation] = useState(false)
     const getCustomer = useGet(`/api/registrations/customers/${params.id}/`)
@@ -111,7 +114,8 @@ function Customer() {
                         navigate('/customers/')
                     })
                     .catch(error => {
-                        console.log(error.response.data)
+                        setErrorMessage(JSON.stringify(error.response.data))
+                        setOpenSnackbar(true)
                         setLoading(false)
                     })
             } else {
@@ -121,7 +125,8 @@ function Customer() {
                         navigate('/customers/')
                     })
                     .catch(error => {
-                        console.log(error.response.data)
+                        setErrorMessage(JSON.stringify(error.response.data))
+                        setOpenSnackbar(true)
                         setLoading(false)
                     })
             }
@@ -136,7 +141,8 @@ function Customer() {
                     setLoading(false)
                 })
                 .catch(error => {
-                    console.log(error.response.data)
+                    setErrorMessage(JSON.stringify(error.response.data))
+                    setOpenSnackbar(true)
                     setLoading(false)
                 })
         }
@@ -153,7 +159,8 @@ function Customer() {
                 navigate('/customers/')
             })
             .catch(error => {
-                console.log(error.response.data)
+                setErrorMessage(JSON.stringify(error.response.data))
+                setOpenSnackbar(true)
                 setLoading(false)
             })
     }
@@ -416,6 +423,11 @@ function Customer() {
                     <Button variant='outlined' onClick={handleDeleteCustomer}>Sim</Button>
                 </DialogActions>
             </Dialog>
+            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={() => setOpenSnackbar(false)}>
+                <Alert severity="error" sx={{ width: '100%' }}>
+                    {errorMessage}
+                </Alert>
+            </Snackbar>
         </>
     )
 }
