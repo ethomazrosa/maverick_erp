@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import {
     Container, Paper, Box, TextField, Typography, Button,
-    IconButton, Avatar, Grid
+    IconButton, Avatar, Grid, Snackbar, Alert,
 } from '@mui/material'
 import { useGet, usePut } from '../hooks/useApi'
 import { useNavigate } from 'react-router-dom'
@@ -34,6 +34,8 @@ function Profile() {
     const userLastname = userCookie[Constants.LAST_NAME_COOKIE]
     const [loading, setLoading] = useState(true)
     const [profile, setProfile] = useState(emptyProfile)
+    const [errorMessage, setErrorMessage] = useState('')
+    const [openSnackbar, setOpenSnackbar] = useState(false)
     const putProfile = usePut(`/api/users/profiles/${userId}/`, true)
     const getProfile = useGet(`/api/users/profiles/${userId}/`)
     const formik = useFormik({
@@ -50,7 +52,8 @@ function Profile() {
                         navigate('/')
                     })
                     .catch(error => {
-                        console.log(error.response.data)
+                        setErrorMessage(JSON.stringify(error.response.data))
+                        setOpenSnackbar(true)
                         setLoading(false)
                     })
             } else {
@@ -60,7 +63,8 @@ function Profile() {
                         navigate('/')
                     })
                     .catch(error => {
-                        console.log(error.response.data)
+                        setErrorMessage(JSON.stringify(error.response.data))
+                        setOpenSnackbar(true)
                         setLoading(false)
                     })
             }
@@ -74,7 +78,8 @@ function Profile() {
                 setLoading(false)
             })
             .catch(error => {
-                console.log(error.response.data)
+                setErrorMessage(JSON.stringify(error.response.data))
+                setOpenSnackbar(true)
                 setLoading(false)
             })
         // eslint-disable-next-line
@@ -135,7 +140,7 @@ function Profile() {
                                             format='###.###.###-##'
                                             mask='_'
                                             //autoFocus
-                                            onValueChange={v => formik.setFieldValue('identification_number', v.floatValue)}
+                                            onValueChange={v => formik.setFieldValue('identification_number', v.floatValue ?? '')}
                                             onBlur={formik.handleBlur}
                                             value={formik.values.identification_number}
                                             error={formik.touched.identification_number && Boolean(formik.errors.identification_number)}
@@ -150,7 +155,7 @@ function Profile() {
                                             customInput={TextField}
                                             format='(##) ##### ####'
                                             mask='_'
-                                            onValueChange={v => formik.setFieldValue('phone_number', v.floatValue)}
+                                            onValueChange={v => formik.setFieldValue('phone_number', v.floatValue ?? '')}
                                             onBlur={formik.handleBlur}
                                             value={formik.values.phone_number}
                                             error={formik.touched.phone_number && Boolean(formik.errors.phone_number)}
@@ -168,6 +173,11 @@ function Profile() {
                     </Box>
                 </Paper>
             </Container>
+            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={() => setOpenSnackbar(false)}>
+                <Alert severity="error" sx={{ width: '100%' }}>
+                    {errorMessage}
+                </Alert>
+            </Snackbar>
         </>
     )
 }

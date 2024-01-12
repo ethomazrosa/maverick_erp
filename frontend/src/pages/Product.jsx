@@ -167,7 +167,7 @@ function Product() {
                                 fixedDecimalScale
                                 prefix='R$ '
                                 allowNegative={false}
-                                onValueChange={v => formik.setFieldValue('price', v.floatValue)}
+                                onValueChange={v => formik.setFieldValue('price', v.floatValue ?? '')}
                                 onBlur={formik.handleBlur}
                                 value={formik.values.price}
                                 error={formik.touched.price && Boolean(formik.errors.price)}
@@ -184,7 +184,7 @@ function Product() {
                                 decimalScale={2}
                                 suffix='%'
                                 allowNegative={false}
-                                onValueChange={v => formik.setFieldValue('profit_percentage', v.floatValue)}
+                                onValueChange={v => formik.setFieldValue('profit_percentage', v.floatValue ?? '')}
                                 onBlur={formik.handleBlur}
                                 value={formik.values.profit_percentage}
                                 error={formik.touched.profit_percentage && Boolean(formik.errors.profit_percentage)}
@@ -207,7 +207,7 @@ function Product() {
                                 customInput={TextField}
                                 format='####.##.##'
                                 mask='_'
-                                onValueChange={v => formik.setFieldValue('ncm_naladish', v.floatValue)}
+                                onValueChange={v => formik.setFieldValue('ncm_naladish', v.floatValue ?? '')}
                                 onBlur={formik.handleBlur}
                                 value={formik.values.ncm_naladish}
                             />
@@ -240,7 +240,7 @@ function Product() {
                                 fixedDecimalScale
                                 prefix='R$ '
                                 allowNegative={false}
-                                onValueChange={v => formik.setFieldValue('icms_base_calc', v.floatValue)}
+                                onValueChange={v => formik.setFieldValue('icms_base_calc', v.floatValue ?? '')}
                                 onBlur={formik.handleBlur}
                                 value={formik.values.icms_base_calc}
                             />
@@ -257,7 +257,7 @@ function Product() {
                                 fixedDecimalScale
                                 prefix='R$ '
                                 allowNegative={false}
-                                onValueChange={v => formik.setFieldValue('icms_price', v.floatValue)}
+                                onValueChange={v => formik.setFieldValue('icms_price', v.floatValue ?? '')}
                                 onBlur={formik.handleBlur}
                                 value={formik.values.icms_price}
                             />
@@ -272,7 +272,7 @@ function Product() {
                                 decimalScale={2}
                                 suffix='%'
                                 allowNegative={false}
-                                onValueChange={v => formik.setFieldValue('icms_rate', v.floatValue)}
+                                onValueChange={v => formik.setFieldValue('icms_rate', v.floatValue ?? '')}
                                 onBlur={formik.handleBlur}
                                 value={formik.values.icms_rate}
                             />
@@ -289,7 +289,7 @@ function Product() {
                                 fixedDecimalScale
                                 prefix='R$ '
                                 allowNegative={false}
-                                onValueChange={v => formik.setFieldValue('ipi_price', v.floatValue)}
+                                onValueChange={v => formik.setFieldValue('ipi_price', v.floatValue ?? '')}
                                 onBlur={formik.handleBlur}
                                 value={formik.values.ipi_price}
                             />
@@ -304,7 +304,7 @@ function Product() {
                                 decimalScale={2}
                                 suffix='%'
                                 allowNegative={false}
-                                onValueChange={v => formik.setFieldValue('ipi_rate', v.floatValue)}
+                                onValueChange={v => formik.setFieldValue('ipi_rate', v.floatValue ?? '')}
                                 onBlur={formik.handleBlur}
                                 value={formik.values.ipi_rate}
                             />

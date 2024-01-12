@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import {
     Typography, Toolbar, IconButton, TextField, Dialog, DialogTitle,
-    Box, Container, Grid, DialogActions, Button, Autocomplete,
+    Box, Container, Grid, DialogActions, Button, Autocomplete, Snackbar,
+    Alert,
 } from '@mui/material'
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined'
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
@@ -19,7 +20,7 @@ const validationSchema = object({
     // company_name: string().required('Por favor preencha o nome fantasia.'),
     // brand_name: string().required('Por favor preencha a razão social.'),
     identification_number: string().required('Por favor preencha o CPF/CNPJ.'),
-    email: string().required('Por favor preencha o email.'),
+    email: string().email('Por favor preencha um email válido').required('Por favor preencha o email.'),
     mobile_phone: string().required('Por favor preencha o telefone celular.'),
     address_name: string().required('Por favor preencha o endereço.'),
     address_number: string().required('Por favor preencha o número.'),
@@ -92,6 +93,8 @@ function Customer() {
     const params = useParams()
     const navigate = useNavigate()
     const [loading, setLoading] = useState(true)
+    const [errorMessage, setErrorMessage] = useState('')
+    const [openSnackbar, setOpenSnackbar] = useState(false)
     const [customer, setCustomer] = useState(emptyCustomer)
     const [openConfirmation, setOpenConfirmation] = useState(false)
     const getCustomer = useGet(`/api/registrations/customers/${params.id}/`)
@@ -111,7 +114,8 @@ function Customer() {
                         navigate('/customers/')
                     })
                     .catch(error => {
-                        console.log(error.response.data)
+                        setErrorMessage(JSON.stringify(error.response.data))
+                        setOpenSnackbar(true)
                         setLoading(false)
                     })
             } else {
@@ -121,7 +125,8 @@ function Customer() {
                         navigate('/customers/')
                     })
                     .catch(error => {
-                        console.log(error.response.data)
+                        setErrorMessage(JSON.stringify(error.response.data))
+                        setOpenSnackbar(true)
                         setLoading(false)
                     })
             }
@@ -136,7 +141,8 @@ function Customer() {
                     setLoading(false)
                 })
                 .catch(error => {
-                    console.log(error.response.data)
+                    setErrorMessage(JSON.stringify(error.response.data))
+                    setOpenSnackbar(true)
                     setLoading(false)
                 })
         }
@@ -153,7 +159,8 @@ function Customer() {
                 navigate('/customers/')
             })
             .catch(error => {
-                console.log(error.response.data)
+                setErrorMessage(JSON.stringify(error.response.data))
+                setOpenSnackbar(true)
                 setLoading(false)
             })
     }
@@ -212,7 +219,7 @@ function Customer() {
                                 customInput={TextField}
                                 format={formik.values.person_type === 'PF' ? '###.###.###-##' : '##.###.###/####-##'}
                                 mask='_'
-                                onValueChange={v => formik.setFieldValue('identification_number', v.floatValue)}
+                                onValueChange={v => formik.setFieldValue('identification_number', v.floatValue ?? '')}
                                 onBlur={formik.handleBlur}
                                 value={formik.values.identification_number}
                                 error={formik.touched.identification_number && Boolean(formik.errors.identification_number)}
@@ -292,7 +299,7 @@ function Customer() {
                                 customInput={TextField}
                                 format='(##) ####-####'
                                 mask='_'
-                                onValueChange={v => formik.setFieldValue('phone', v.floatValue)}
+                                onValueChange={v => formik.setFieldValue('phone', v.floatValue ?? '')}
                                 onBlur={formik.handleBlur}
                                 value={formik.values.phone}
                             />
@@ -305,7 +312,7 @@ function Customer() {
                                 customInput={TextField}
                                 format='(##) #####-####'
                                 mask='_'
-                                onValueChange={v => formik.setFieldValue('mobile_phone', v.floatValue)}
+                                onValueChange={v => formik.setFieldValue('mobile_phone', v.floatValue ?? '')}
                                 onBlur={formik.handleBlur}
                                 value={formik.values.mobile_phone}
                                 error={formik.touched.mobile_phone && Boolean(formik.errors.mobile_phone)}
@@ -332,7 +339,7 @@ function Customer() {
                                 decimalSeparator=','
                                 decimalScale={0}
                                 allowNegative={false}
-                                onValueChange={v => formik.setFieldValue('address_number', v.floatValue)}
+                                onValueChange={v => formik.setFieldValue('address_number', v.floatValue ?? '')}
                                 onBlur={formik.handleBlur}
                                 value={formik.values.address_number}
                                 error={formik.touched.address_number && Boolean(formik.errors.address_number)}
@@ -399,7 +406,7 @@ function Customer() {
                                 customInput={TextField}
                                 format='#####-###'
                                 mask='_'
-                                onValueChange={v => formik.setFieldValue('postal_code', v.floatValue)}
+                                onValueChange={v => formik.setFieldValue('postal_code', v.floatValue ?? '')}
                                 onBlur={formik.handleBlur}
                                 value={formik.values.postal_code}
                                 error={formik.touched.postal_code && Boolean(formik.errors.postal_code)}
@@ -416,6 +423,11 @@ function Customer() {
                     <Button variant='outlined' onClick={handleDeleteCustomer}>Sim</Button>
                 </DialogActions>
             </Dialog>
+            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={() => setOpenSnackbar(false)}>
+                <Alert severity="error" sx={{ width: '100%' }}>
+                    {errorMessage}
+                </Alert>
+            </Snackbar>
         </>
     )
 }
