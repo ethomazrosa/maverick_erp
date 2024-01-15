@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import {
     Typography, Toolbar, IconButton, TextField, Dialog, DialogTitle,
-    Box, Container, Grid, DialogActions, Button,
+    Box, Container, Grid, DialogActions, Button, Snackbar, Alert
 } from '@mui/material'
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined'
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
@@ -44,6 +44,8 @@ function Product() {
     const navigate = useNavigate()
     const [loading, setLoading] = useState(true)
     const [product, setProduct] = useState(emptyProduct)
+    const [errorMessage, setErrorMessage] = useState('')
+    const [openSnackbar, setOpenSnackbar] = useState(false)
     const [openConfirmation, setOpenConfirmation] = useState(false)
     const getProduct = useGet(`/api/registrations/products/${params.id}/`)
     const putProduct = usePut(`/api/registrations/products/${params.id}/`)
@@ -62,7 +64,8 @@ function Product() {
                         navigate('/products/')
                     })
                     .catch(error => {
-                        console.log(error.response.data)
+                        setErrorMessage(JSON.stringify(error.response.data))
+                        setOpenSnackbar(true)
                         setLoading(false)
                     })
             } else {
@@ -72,7 +75,8 @@ function Product() {
                         navigate('/products/')
                     })
                     .catch(error => {
-                        console.log(error.response.data)
+                        setErrorMessage(JSON.stringify(error.response.data))
+                        setOpenSnackbar(true)
                         setLoading(false)
                     })
             }
@@ -87,7 +91,8 @@ function Product() {
                     setLoading(false)
                 })
                 .catch(error => {
-                    console.log(error.response.data)
+                    setErrorMessage(JSON.stringify(error.response.data))
+                    setOpenSnackbar(true)
                     setLoading(false)
                 })
         }
@@ -109,7 +114,8 @@ function Product() {
                 navigate('/products/')
             })
             .catch(error => {
-                console.log(error.response.data)
+                setErrorMessage(JSON.stringify(error.response.data))
+                setOpenSnackbar(true)
                 setLoading(false)
             })
     }
@@ -340,6 +346,11 @@ function Product() {
                     <Button variant='outlined' onClick={handleDeleteProduct}>Sim</Button>
                 </DialogActions>
             </Dialog>
+            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={() => setOpenSnackbar(false)}>
+                <Alert severity="error" sx={{ width: '100%' }}>
+                    {errorMessage}
+                </Alert>
+            </Snackbar>
         </>
     )
 }
