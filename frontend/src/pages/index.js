@@ -2,6 +2,7 @@ import Auth from './Auth'
 import Dashboard from './Dashboard'
 import Profile from './Profile'
 import Quote from './Quote'
+import QuoteList from './QuoteList'
 import ResponsibleCompany from './ResponsibleCompany'
 import ResponsibleCompanyList from './ResponsibleCompanyList'
 import ProductList from './ProductList'
@@ -16,6 +17,7 @@ export {
     Dashboard,
     Profile,
     Quote,
+    QuoteList,
     ResponsibleCompany,
     ResponsibleCompanyList,
     ProductList,

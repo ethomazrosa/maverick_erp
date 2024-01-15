@@ -175,7 +175,7 @@ function ResponsibleCompany() {
                     <SaveOutlinedIcon />
                 </IconButton>
             </Toolbar>
-            <Container component='main' maxWidth='lg' disableGutters sx={{ mt: 2 }}>
+            <Container component='main' maxWidth='lg' disableGutters sx={{ mt: '2rem' }}>
                 <Box component='form' id='form' onSubmit={formik.handleSubmit}>
                     <Grid container justifyContent='start' columnSpacing={2} rowSpacing={2}>
                         <Grid item xs={12}>
@@ -194,7 +194,6 @@ function ResponsibleCompany() {
                                 fullWidth
                                 id='company_name'
                                 label='Razão Social'
-                                autoFocus
                                 error={formik.touched.company_name && Boolean(formik.errors.company_name)}
                                 helperText={formik.touched.company_name && formik.errors.company_name}
                                 {...formik.getFieldProps('company_name')}

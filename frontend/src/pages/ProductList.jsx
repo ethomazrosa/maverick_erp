@@ -35,13 +35,14 @@ function ProductList() {
         },
         {
             headerClassName: 'header',
-            field: 'price',
-            headerName: 'Valor de Compra',
+            field: 'sale_price',
+            headerName: 'Valor de Venda',
             flex: 4,
             type: 'number',
-            valueFormatter: (params) => {
-                return Number(params.value).toLocaleString(undefined, { style: 'currency', currency: 'BRL' })
-            },
+            valueGetter: (params) => {
+                return Number(params.row.price * (1 + (params.row.profit_percentage / 100)))
+                    .toLocaleString(undefined, { style: 'currency', currency: 'BRL' })
+            }
         },
     ]
     if (useMediaQuery(useTheme().breakpoints.up('sm'))) {
@@ -50,11 +51,10 @@ function ProductList() {
                 headerClassName: 'header',
                 field: 'profit_percentage',
                 headerName: '% Lucro',
-                flex: 1,
+                flex: 2,
                 type: 'number',
                 valueFormatter: (params) => {
-                    const valueFormatted = Number(params.value).toLocaleString()
-                    return `${valueFormatted}%`
+                    return `${Number(params.value).toLocaleString()}%`
                 },
             },
             {

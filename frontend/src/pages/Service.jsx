@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import {
     Typography, Toolbar, IconButton, TextField, Dialog, DialogTitle,
-    Box, Container, Grid, DialogActions, Button,
+    Box, Container, Grid, DialogActions, Button, Snackbar, Alert
 } from '@mui/material'
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined'
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
@@ -32,6 +32,8 @@ function Service() {
     const navigate = useNavigate()
     const [loading, setLoading] = useState(true)
     const [service, setService] = useState(emptyService)
+    const [errorMessage, setErrorMessage] = useState('')
+    const [openSnackbar, setOpenSnackbar] = useState(false)
     const [openConfirmation, setOpenConfirmation] = useState(false)
     const getService = useGet(`/api/registrations/services/${params.id}/`)
     const putService = usePut(`/api/registrations/services/${params.id}/`)
@@ -50,7 +52,8 @@ function Service() {
                         navigate('/services/')
                     })
                     .catch(error => {
-                        console.log(error.response.data)
+                        setErrorMessage(JSON.stringify(error.response.data))
+                        setOpenSnackbar(true)
                         setLoading(false)
                     })
             } else {
@@ -60,7 +63,8 @@ function Service() {
                         navigate('/services/')
                     })
                     .catch(error => {
-                        console.log(error.response.data)
+                        setErrorMessage(JSON.stringify(error.response.data))
+                        setOpenSnackbar(true)
                         setLoading(false)
                     })
             }
@@ -75,7 +79,8 @@ function Service() {
                     setLoading(false)
                 })
                 .catch(error => {
-                    console.log(error.response.data)
+                    setErrorMessage(JSON.stringify(error.response.data))
+                    setOpenSnackbar(true)
                     setLoading(false)
                 })
         }
@@ -92,7 +97,8 @@ function Service() {
                 navigate('/services/')
             })
             .catch(error => {
-                console.log(error.response.data)
+                setErrorMessage(JSON.stringify(error.response.data))
+                setOpenSnackbar(true)
                 setLoading(false)
             })
     }
@@ -119,7 +125,7 @@ function Service() {
                     <SaveOutlinedIcon />
                 </IconButton>
             </Toolbar>
-            <Container component='main' maxWidth='lg' disableGutters sx={{ mt: '10%' }}>
+            <Container component='main' maxWidth='lg' disableGutters sx={{ mt: '2rem' }}>
                 <Box component='form' id='form' onSubmit={formik.handleSubmit}>
                     <Grid container justifyContent='start' columnSpacing={2} rowSpacing={2}>
                         <Grid item xs={12} sm={4}>
@@ -144,7 +150,7 @@ function Service() {
                                 {...formik.getFieldProps('description')}
                             />
                         </Grid>
-                        <Grid item xs={6} sm={4} lg={3}>
+                        <Grid item xs={6} sm={3} lg={2}>
                             <NumericFormat
                                 id='price'
                                 label='Valor'
@@ -173,6 +179,11 @@ function Service() {
                     <Button variant='outlined' onClick={handleDeleteService}>Sim</Button>
                 </DialogActions>
             </Dialog>
+            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={() => setOpenSnackbar(false)}>
+                <Alert severity="error" sx={{ width: '100%' }}>
+                    {errorMessage}
+                </Alert>
+            </Snackbar>
         </>
     )
 }

@@ -22,7 +22,7 @@ services:
       - POSTGRES_PORT=$POSTGRES_PORT
   frontend:
     image: "ethomazrosa/maverick_frontend"
-    mem_limit: 128m
+    mem_limit: 256m
     hostname: frontend
   nginx:
     image: "ethomazrosa/maverick_nginx"
