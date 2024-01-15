@@ -119,7 +119,7 @@ function Service() {
                     <SaveOutlinedIcon />
                 </IconButton>
             </Toolbar>
-            <Container component='main' maxWidth='lg' disableGutters sx={{ mt: '10%' }}>
+            <Container component='main' maxWidth='lg' disableGutters sx={{ mt: '2rem' }}>
                 <Box component='form' id='form' onSubmit={formik.handleSubmit}>
                     <Grid container justifyContent='start' columnSpacing={2} rowSpacing={2}>
                         <Grid item xs={12} sm={4}>
@@ -144,7 +144,7 @@ function Service() {
                                 {...formik.getFieldProps('description')}
                             />
                         </Grid>
-                        <Grid item xs={6} sm={4} lg={3}>
+                        <Grid item xs={6} sm={3} lg={2}>
                             <NumericFormat
                                 id='price'
                                 label='Valor'

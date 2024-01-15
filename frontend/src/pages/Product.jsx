@@ -34,7 +34,8 @@ const emptyProduct = {
     icms_price: '',
     icms_rate: '',
     ipi_price: '',
-    ipi_rate: ''
+    ipi_rate: '',
+    sale_price: ''
 }
 
 function Product() {
@@ -96,6 +97,11 @@ function Product() {
         // eslint-disable-next-line
     }, [])
 
+    useEffect(() => {
+        formik.values.sale_price = formik.values.price * (1 + (formik.values.profit_percentage / 100))
+        // eslint-disable-next-line
+    }, [formik.values.price, formik.values.profit_percentage])
+
     function handleDeleteProduct() {
         setLoading(true)
         deleteProduct()
@@ -130,7 +136,7 @@ function Product() {
                     <SaveOutlinedIcon />
                 </IconButton>
             </Toolbar>
-            <Container component='main' maxWidth='lg' disableGutters sx={{ mt: '10%' }}>
+            <Container component='main' maxWidth='lg' disableGutters sx={{ mt: '2rem' }}>
                 <Box component='form' id='form' onSubmit={formik.handleSubmit}>
                     <Grid container justifyContent='start' columnSpacing={2} rowSpacing={2}>
                         <Grid item xs={12} sm={4}>
@@ -155,7 +161,7 @@ function Product() {
                                 {...formik.getFieldProps('description')}
                             />
                         </Grid>
-                        <Grid item xs={6} sm={4} lg={3}>
+                        <Grid item xs={6} sm={3} lg={2}>
                             <NumericFormat
                                 id='price'
                                 label='Valor de Compra'
@@ -174,7 +180,7 @@ function Product() {
                                 helperText={formik.touched.price && formik.errors.price}
                             />
                         </Grid>
-                        <Grid item xs={6} sm={4} lg={1.5}>
+                        <Grid item xs={6} sm={2} lg={1.5}>
                             <NumericFormat
                                 id='profit_percentage'
                                 label='% de Lucro'
@@ -191,7 +197,22 @@ function Product() {
                                 helperText={formik.touched.profit_percentage && formik.errors.profit_percentage}
                             />
                         </Grid>
-                        <Grid item xs={6} sm={4} lg={2.5}>
+                        <Grid item xs={6} sm={3} lg={2}>
+                            <NumericFormat
+                                id='sale_price'
+                                label='Valor de Venda'
+                                fullWidth
+                                disabled
+                                customInput={TextField}
+                                thousandSeparator='.'
+                                decimalSeparator=','
+                                decimalScale={2}
+                                fixedDecimalScale
+                                prefix='R$ '
+                                {...formik.getFieldProps('sale_price')}
+                            />
+                        </Grid>
+                        <Grid item xs={6} sm={1.5} lg={2}>
                             <TextField
                                 id='measurement_unit'
                                 label='Unidade de Medida'
@@ -199,7 +220,7 @@ function Product() {
                                 {...formik.getFieldProps('measurement_unit')}
                             />
                         </Grid>
-                        <Grid item xs={6} sm={3} lg={2}>
+                        <Grid item xs={6} sm={2.5} lg={1.5}>
                             <PatternFormat
                                 id='ncm_naladish'
                                 label='NCM/Naladish'
@@ -212,7 +233,7 @@ function Product() {
                                 value={formik.values.ncm_naladish}
                             />
                         </Grid>
-                        <Grid item xs={6} sm={2} lg={1.5}>
+                        <Grid item xs={6} sm={3} lg={1.5}>
                             <TextField
                                 id='o_cst'
                                 label='O/CST'
@@ -228,10 +249,10 @@ function Product() {
                                 {...formik.getFieldProps('cfop')}
                             />
                         </Grid>
-                        <Grid item xs={6} sm={4} lg={3}>
+                        <Grid item xs={6} sm={3} lg={2}>
                             <NumericFormat
                                 id='icms_base_calc'
-                                label='Base de Cáluclo ICMS'
+                                label='Base de Cálculo ICMS'
                                 fullWidth
                                 customInput={TextField}
                                 thousandSeparator='.'
@@ -245,7 +266,7 @@ function Product() {
                                 value={formik.values.icms_base_calc}
                             />
                         </Grid>
-                        <Grid item xs={6} sm={4} lg={3}>
+                        <Grid item xs={6} sm={3} lg={2}>
                             <NumericFormat
                                 id='icms_price'
                                 label='Valor ICMS'
@@ -262,7 +283,7 @@ function Product() {
                                 value={formik.values.icms_price}
                             />
                         </Grid>
-                        <Grid item xs={6} sm={4} lg={1.5}>
+                        <Grid item xs={6} sm={2} lg={1.5}>
                             <NumericFormat
                                 id='icms_rate'
                                 label='Alíquota ICMS'
@@ -277,7 +298,7 @@ function Product() {
                                 value={formik.values.icms_rate}
                             />
                         </Grid>
-                        <Grid item xs={6} sm={4} lg={3}>
+                        <Grid item xs={6} sm={3} lg={2}>
                             <NumericFormat
                                 id='ipi_price'
                                 label='Valor IPI'
@@ -294,7 +315,7 @@ function Product() {
                                 value={formik.values.ipi_price}
                             />
                         </Grid>
-                        <Grid item xs={6} sm={4} lg={1.5}>
+                        <Grid item xs={6} sm={2} lg={1.5}>
                             <NumericFormat
                                 id='ipi_rate'
                                 label='Alíquota IPI'

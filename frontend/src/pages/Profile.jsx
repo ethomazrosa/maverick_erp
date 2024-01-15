@@ -139,7 +139,6 @@ function Profile() {
                                             customInput={TextField}
                                             format='###.###.###-##'
                                             mask='_'
-                                            //autoFocus
                                             onValueChange={v => formik.setFieldValue('identification_number', v.floatValue ?? '')}
                                             onBlur={formik.handleBlur}
                                             value={formik.values.identification_number}

@@ -75,7 +75,7 @@ class Product(models.Model):
     cfop = models.PositiveSmallIntegerField(blank=True, null=True)
     measurement_unit = models.CharField(max_length=25, blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    profit_percentage = models.DecimalField(max_digits=7, decimal_places=4)
+    profit_percentage = models.DecimalField(max_digits=5, decimal_places=2)
     icms_base_calc = models.DecimalField(
         max_digits=10, decimal_places=2, blank=True, null=True
     )
