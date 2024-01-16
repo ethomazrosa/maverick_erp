@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 
-from ..models import Quote, QuoteProduct, QuoteService
-from .serializers import QuoteSerializer, QuoteProductSerializer, QuoteServiceSerializer
+from ..models import Quote
+from .serializers import QuoteSerializer
 
 
 class QuoteViewSet(viewsets.ModelViewSet):

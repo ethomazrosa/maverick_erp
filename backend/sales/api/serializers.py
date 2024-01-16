@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from drf_writable_nested.serializers import WritableNestedModelSerializer
 
 from ..models import Quote, QuoteProduct, QuoteService
 
@@ -15,20 +16,10 @@ class QuoteServiceSerializer(serializers.ModelSerializer):
         exclude = ["quote"]
 
 
-class QuoteSerializer(serializers.ModelSerializer):
+class QuoteSerializer(WritableNestedModelSerializer):
     class Meta:
         model = Quote
         fields = "__all__"
 
     products = QuoteProductSerializer(many=True)
     services = QuoteServiceSerializer(many=True)
-
-    def create(self, validated_data):
-        products = validated_data.pop("products")
-        services = validated_data.pop("services")
-        quote = Quote.objects.create(**validated_data)
-        for product in products:
-            QuoteProduct.objects.create(quote=quote, **product)
-        for service in services:
-            QuoteService.objects.create(quote=quote, **service)
-        return quote
