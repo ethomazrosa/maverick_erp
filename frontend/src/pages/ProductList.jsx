@@ -49,6 +49,16 @@ function ProductList() {
         columns.push(
             {
                 headerClassName: 'header',
+                field: 'price',
+                headerName: 'Valor de Compra',
+                flex: 4,
+                type: 'number',
+                valueFormatter: (params) => {
+                    return Number(params.value).toLocaleString(undefined, { style: 'currency', currency: 'BRL' })
+                },
+            },
+            {
+                headerClassName: 'header',
                 field: 'profit_percentage',
                 headerName: '% Lucro',
                 flex: 2,
