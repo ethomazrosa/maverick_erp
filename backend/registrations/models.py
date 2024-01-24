@@ -55,6 +55,10 @@ class ContactInformation(models.Model):
 
 
 class ResponsibleCompany(Address, ContactInformation):
+    class Meta:
+        verbose_name = "Empresa Responsável"
+        verbose_name_plural = "Empresas Responsáveis"
+
     identification_number = models.PositiveBigIntegerField(unique=True)
     company_name = models.CharField(max_length=250)
     brand_name = models.CharField(max_length=250)
@@ -68,6 +72,9 @@ class ResponsibleCompany(Address, ContactInformation):
 
 
 class Product(models.Model):
+    class Meta:
+        verbose_name = "Produto"
+
     name = models.CharField(max_length=50, unique=True)
     description = models.TextField(max_length=1000)
     ncm_naladish = models.PositiveIntegerField(blank=True, null=True)
@@ -97,6 +104,9 @@ class Product(models.Model):
 
 
 class Service(models.Model):
+    class Meta:
+        verbose_name = "Serviço"
+
     name = models.CharField(max_length=50, unique=True)
     description = models.TextField(max_length=1000)
     price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -106,6 +116,9 @@ class Service(models.Model):
 
 
 class Customer(Address, ContactInformation):
+    class Meta:
+        verbose_name = "Cliente"
+
     class PersonType(models.TextChoices):
         PF = "PF", _("Pessoa Física")
         PJ = "PJ", _("Pessoa Jurídica")

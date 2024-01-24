@@ -21,7 +21,7 @@ function ProductList() {
             headerClassName: 'header',
             field: 'id',
             headerName: 'ID',
-            minWidth: 40,
+            minWidth: 50,
             flex: 1,
             valueFormatter: (params) => {
                 return String(params.value).padStart(3, '0')
@@ -47,6 +47,16 @@ function ProductList() {
     ]
     if (useMediaQuery(useTheme().breakpoints.up('sm'))) {
         columns.push(
+            {
+                headerClassName: 'header',
+                field: 'price',
+                headerName: 'Valor de Compra',
+                flex: 4,
+                type: 'number',
+                valueFormatter: (params) => {
+                    return Number(params.value).toLocaleString(undefined, { style: 'currency', currency: 'BRL' })
+                },
+            },
             {
                 headerClassName: 'header',
                 field: 'profit_percentage',
@@ -121,6 +131,9 @@ function ProductList() {
                                 paginationModel: {
                                     pageSize: 10,
                                 },
+                            },
+                            sorting: {
+                                sortModel: [{ field: 'id', sort: 'desc' }],
                             },
                         }}
                         pageSizeOptions={[10, 25, 50, 100]}
