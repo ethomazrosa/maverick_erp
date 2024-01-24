@@ -175,7 +175,7 @@ function ResponsibleCompany() {
                     <SaveOutlinedIcon />
                 </IconButton>
             </Toolbar>
-            <Container component='main' maxWidth='lg' disableGutters sx={{ mt: '2rem' }}>
+            <Container component='main' maxWidth='xl' disableGutters sx={{ mt: '2rem' }}>
                 <Box component='form' id='form' onSubmit={formik.handleSubmit}>
                     <Grid container justifyContent='start' columnSpacing={2} rowSpacing={2}>
                         <Grid item xs={12}>

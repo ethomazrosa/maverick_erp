@@ -4,6 +4,12 @@ from drf_writable_nested.serializers import WritableNestedModelSerializer
 from ..models import Quote, QuoteProduct, QuoteService
 
 
+class DynamicDepthSerializer(serializers.ModelSerializer):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.Meta.depth = self.context.get("depth", 0)
+
+
 class QuoteProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuoteProduct
@@ -16,7 +22,7 @@ class QuoteServiceSerializer(serializers.ModelSerializer):
         exclude = ["quote"]
 
 
-class QuoteSerializer(WritableNestedModelSerializer):
+class QuoteSerializer(WritableNestedModelSerializer, DynamicDepthSerializer):
     class Meta:
         model = Quote
         fields = "__all__"

@@ -21,7 +21,7 @@ function ProductList() {
             headerClassName: 'header',
             field: 'id',
             headerName: 'ID',
-            minWidth: 40,
+            minWidth: 50,
             flex: 1,
             valueFormatter: (params) => {
                 return String(params.value).padStart(3, '0')
@@ -131,6 +131,9 @@ function ProductList() {
                                 paginationModel: {
                                     pageSize: 10,
                                 },
+                            },
+                            sorting: {
+                                sortModel: [{ field: 'id', sort: 'desc' }],
                             },
                         }}
                         pageSizeOptions={[10, 25, 50, 100]}
