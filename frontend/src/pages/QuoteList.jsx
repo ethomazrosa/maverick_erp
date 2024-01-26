@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Toolbar, IconButton, Typography, Snackbar, Alert } from '@mui/material'
-import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined'
-import AddIcon from '@mui/icons-material/Add'
-import { Link, useNavigate } from 'react-router-dom'
+import { Box, Snackbar, Alert } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
 import { useGet } from '../hooks/useApi'
-import { ProgressBar } from '../components'
+import { ProgressBar, ToolbarList, ErrorSnackbar } from '../components'
 import { DataGrid, ptBR } from '@mui/x-data-grid'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useTheme } from '@mui/material/styles'
@@ -100,17 +98,10 @@ function QuoteList() {
     return (
         <>
             <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                <Toolbar variant='dense' disableGutters sx={{ minHeight: 20, height: 20 }}>
-                    <IconButton component={Link} to='/' edge='start'>
-                        <ArrowBackOutlinedIcon />
-                    </IconButton>
-                    <Typography variant='h6' component='div' sx={{ flexGrow: 1, textAlign: 'center' }}>
-                        Orçamentos
-                    </Typography>
-                    <IconButton color='inherit' edge='end' component={Link} to='/quotes/:new'>
-                        <AddIcon />
-                    </IconButton>
-                </Toolbar>
+                <ToolbarList
+                    title='Orçamentos'
+                    clickNew='/quotes/:new'
+                />
                 <Box sx={{ display: 'flex', flexGrow: 1, mt: 1 }}>
                     <Box sx={{
                         flexGrow: 1,
@@ -124,34 +115,24 @@ function QuoteList() {
                             localeText={ptBR.components.MuiDataGrid.defaultProps.localeText}
                             //density='compact'
                             initialState={{
-                                pagination: {
-                                    paginationModel: {
-                                        pageSize: 10,
-                                    },
-                                },
-                                sorting: {
-                                    sortModel: [{ field: 'id', sort: 'desc' }],
-                                },
+                                pagination: { paginationModel: { pageSize: 10, }, },
+                                sorting: { sortModel: [{ field: 'id', sort: 'desc' }], },
                             }}
                             pageSizeOptions={[10, 25, 50, 100]}
                             sx={{
-                                '.MuiDataGrid-cell:focus': {
-                                    outline: 'none'
-                                },
-                                '& .MuiDataGrid-row:hover': {
-                                    cursor: 'pointer'
-                                },
+                                '.MuiDataGrid-cell:focus': { outline: 'none' },
+                                '& .MuiDataGrid-row:hover': { cursor: 'pointer' },
                                 border: 0
                             }}
                         />
                     </Box>
                 </Box>
             </Box>
-            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={() => setOpenSnackbar(false)}>
-                <Alert severity="error" sx={{ width: '100%' }}>
-                    {errorMessage}
-                </Alert>
-            </Snackbar>
+            <ErrorSnackbar
+                isOpened={openSnackbar}
+                onClose={() => setOpenSnackbar(false)}
+                errorMessage={errorMessage}
+            />
         </>
     )
 }
