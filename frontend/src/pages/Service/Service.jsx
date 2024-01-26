@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
-import {
-    Typography, Toolbar, IconButton, TextField, Dialog, DialogTitle,
-    Box, Container, Grid, DialogActions, Button, Snackbar, Alert
-} from '@mui/material'
-import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined'
-import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
+import { useNavigate, useParams } from 'react-router-dom'
+import { TextField, Box, Container, Grid } from '@mui/material'
 import { useFormik } from 'formik'
 import { object, string } from 'yup'
 import { NumericFormat } from 'react-number-format'
-import { useDelete, useGet, usePost, usePut } from '../hooks/useApi'
-import { ProgressBar } from '../components'
+import { useDelete, useGet, usePost, usePut } from '../../hooks/useApi'
+import {
+    ProgressBar, ToolbarRegistration, ErrorSnackbar,
+    DeleteConfirmationDialog
+} from '../../components'
 
 const validationSchema = object({
     name: string().required('Por favor preencha o nome.'),
@@ -90,7 +87,7 @@ function Service() {
         // eslint-disable-next-line
     }, [])
 
-    function handleDeleteService() {
+    function handleDelete() {
         setLoading(true)
         deleteService()
             .then(response => {
@@ -109,22 +106,12 @@ function Service() {
 
     return (
         <>
-            <Toolbar variant='dense' disableGutters sx={{ minHeight: 20, height: 20 }}>
-                <IconButton component={Link} to='/services/' edge='start'>
-                    <ArrowBackOutlinedIcon />
-                </IconButton>
-                <Typography variant='h6' component='div' sx={{ flexGrow: 1, textAlign: 'center' }}>
-                    {service.name || 'Novo Serviço'}
-                </Typography>
-                {params.id !== ':new' && (
-                    <IconButton color='error' edge='end' onClick={() => setOpenConfirmation(true)}>
-                        <DeleteOutlinedIcon />
-                    </IconButton>
-                )}
-                <IconButton color='inherit' edge='end' form='form' type='submit'>
-                    <SaveOutlinedIcon />
-                </IconButton>
-            </Toolbar>
+            <ToolbarRegistration
+                backTo='/services/'
+                idRegistration={params.id}
+                title={formik.values.name || 'Novo Serviço'}
+                clickDelete={() => setOpenConfirmation(true)}
+            />
             <Container component='main' maxWidth='xl' disableGutters sx={{ mt: '2rem' }}>
                 <Box component='form' id='form' onSubmit={formik.handleSubmit}>
                     <Grid container justifyContent='start' columnSpacing={2} rowSpacing={2}>
@@ -172,18 +159,16 @@ function Service() {
                     </Grid>
                 </Box>
             </Container>
-            <Dialog open={openConfirmation} onClose={() => setOpenConfirmation(false)}>
-                <DialogTitle>Tem certeza que deseja excluir o serviço?</DialogTitle>
-                <DialogActions>
-                    <Button variant='contained' onClick={() => setOpenConfirmation(false)} autoFocus>Não</Button>
-                    <Button variant='outlined' onClick={handleDeleteService}>Sim</Button>
-                </DialogActions>
-            </Dialog>
-            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={() => setOpenSnackbar(false)}>
-                <Alert severity="error" sx={{ width: '100%' }}>
-                    {errorMessage}
-                </Alert>
-            </Snackbar>
+            <DeleteConfirmationDialog
+                isOpened={openConfirmation}
+                onClose={() => setOpenConfirmation(false)}
+                handleDelete={handleDelete}
+            />
+            <ErrorSnackbar
+                isOpened={openSnackbar}
+                onClose={() => setOpenSnackbar(false)}
+                errorMessage={errorMessage}
+            />
         </>
     )
 }

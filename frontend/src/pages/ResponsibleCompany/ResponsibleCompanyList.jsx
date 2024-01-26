@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
-    Typography, Toolbar, IconButton, Grid, Card, Button, DialogTitle,
-    CardContent, CardMedia, CardActionArea, CardActions, DialogActions, Dialog
+    Typography, IconButton, Grid, Card,
+    CardContent, CardMedia, CardActionArea, CardActions,
 } from '@mui/material'
-import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined'
-import AddIcon from '@mui/icons-material/Add'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
-import { useGet, useDelete } from '../hooks/useApi'
-import { ProgressBar } from '../components'
+import { useGet, useDelete } from '../../hooks/useApi'
+import {
+    ProgressBar, ToolbarList, ErrorSnackbar,
+    DeleteConfirmationDialog
+} from '../../components'
 
-function ResponsibleCompany() {
+function ResponsibleCompanyList() {
 
     const navigate = useNavigate()
     const [loading, setLoading] = useState(true)
@@ -19,6 +20,8 @@ function ResponsibleCompany() {
     const getResponsibleCompanies = useGet('/api/registrations/responsible_companies/')
     const deleteResponsibleCompany = useDelete(`/api/registrations/responsible_companies/${selectedCompany}/`)
     const [responsibleCompanies, setResponsibleCompanies] = useState([])
+    const [errorMessage, setErrorMessage] = useState('')
+    const [openSnackbar, setOpenSnackbar] = useState(false)
 
     useEffect(() => {
         getResponsibleCompanies()
@@ -27,7 +30,8 @@ function ResponsibleCompany() {
                 setLoading(false)
             })
             .catch(error => {
-                console.log(error.response.data)
+                setErrorMessage(JSON.stringify(error.response.data))
+                setOpenSnackbar(true)
                 setLoading(false)
             })
         // eslint-disable-next-line
@@ -38,16 +42,15 @@ function ResponsibleCompany() {
         setOpenConfirmation(true)
     }
 
-    function deleteCompany() {
+    function handleDelete() {
         setLoading(true)
         deleteResponsibleCompany()
             .then(response => {
-                // setOpenConfirmation(false)
-                // setLoading(false)
                 navigate(0)
             })
             .catch(error => {
-                console.log(error.response.data)
+                setErrorMessage(JSON.stringify(error.response.data))
+                setOpenSnackbar(true)
                 setLoading(false)
             })
     }
@@ -58,17 +61,10 @@ function ResponsibleCompany() {
 
     return (
         <>
-            <Toolbar variant='dense' disableGutters sx={{ minHeight: 20, height: 20 }}>
-                <IconButton component={Link} to='/' edge='start'>
-                    <ArrowBackOutlinedIcon />
-                </IconButton>
-                <Typography variant='h6' component='div' sx={{ flexGrow: 1, textAlign: 'center' }}>
-                    Empresas Responsáveis
-                </Typography>
-                <IconButton color='inherit' component={Link} to='/responsible_companies/:new' edge='end'>
-                    <AddIcon />
-                </IconButton>
-            </Toolbar>
+            <ToolbarList
+                title='Empresas Responsáveis'
+                clickNew='/responsible_companies/:new'
+            />
             <Grid
                 container
                 sx={{
@@ -113,15 +109,18 @@ function ResponsibleCompany() {
                     )
                 })}
             </Grid>
-            <Dialog open={openConfirmation} onClose={() => setOpenConfirmation(false)}>
-                <DialogTitle>Tem certeza que deseja excluir a empresa responsável?</DialogTitle>
-                <DialogActions>
-                    <Button variant='contained' onClick={() => setOpenConfirmation(false)} autoFocus>Não</Button>
-                    <Button variant='outlined' onClick={deleteCompany}>Sim</Button>
-                </DialogActions>
-            </Dialog>
+            <DeleteConfirmationDialog
+                isOpened={openConfirmation}
+                onClose={() => setOpenConfirmation(false)}
+                handleDelete={handleDelete}
+            />
+            <ErrorSnackbar
+                isOpened={openSnackbar}
+                onClose={() => setOpenSnackbar(false)}
+                errorMessage={errorMessage}
+            />
         </>
     )
 }
 
-export default ResponsibleCompany
+export default ResponsibleCompanyList
