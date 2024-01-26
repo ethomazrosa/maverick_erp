@@ -1,4 +1,4 @@
-import ResponsiveDrawer from './drawer'
+import ResponsiveDrawer from './Drawer'
 import ProgressBar from './ProgressBar'
 import ToolbarRegistration from './ToolbarRegistration'
 import ToolbarList from './ToolbarList'
