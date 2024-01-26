@@ -4,9 +4,10 @@ import { useParams, useNavigate } from 'react-router-dom'
 import {
     ProgressBar, ToolbarRegistration, ErrorSnackbar,
     DeleteConfirmationDialog
-} from '../components'
-import { FormFields, QuoteItems } from './quote'
-import { useGet, usePost, usePut, useDelete } from '../hooks/useApi'
+} from '../../components'
+import FormFields from './FormFields'
+import QuoteItems from './DataGrid'
+import { useGet, usePost, usePut, useDelete } from '../../hooks/useApi'
 import { useFormik } from 'formik'
 import { object, string } from 'yup'
 import useMediaQuery from '@mui/material/useMediaQuery'
@@ -214,7 +215,7 @@ function Quote() {
         // eslint-disable-next-line
     }, [])
 
-    function handleDeleteQuote() {
+    function handleDelete() {
         setLoading(true)
         deleteQuote()
             .then(response => {
@@ -261,7 +262,7 @@ function Quote() {
             <DeleteConfirmationDialog
                 isOpened={openConfirmation}
                 onClose={() => setOpenConfirmation(false)}
-                handleDelete={handleDeleteQuote}
+                handleDelete={handleDelete}
             />
             <ErrorSnackbar
                 isOpened={openSnackbar}

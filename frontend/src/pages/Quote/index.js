@@ -1,4 +1,4 @@
-import FormFields from './FormFields'
-import QuoteItems from './DataGrid'
+import Quote from './Quote'
+import QuoteList from './QuoteList'
 
-export { FormFields, QuoteItems }
+export { Quote, QuoteList }
