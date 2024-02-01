@@ -22,6 +22,18 @@ const theme = createTheme({
       default: '#FBFBFB', // Light Grey
     },
   },
+  components: {
+    MuiTextField: {
+      defaultProps: {
+        size: 'small',
+      },
+    },
+    MuiDataGrid: {
+      defaultProps: {
+        density: 'compact',
+      },
+    },
+  }
 })
 
 function App() {

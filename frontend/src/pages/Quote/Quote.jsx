@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { Box, Container, Grid } from '@mui/material'
+import { GridActionsCellItem } from '@mui/x-data-grid'
+import DeleteIcon from '@mui/icons-material/DeleteOutlined'
 import { useParams, useNavigate } from 'react-router-dom'
 import {
     ProgressBar, ToolbarRegistration, ErrorSnackbar,
     DeleteConfirmationDialog
 } from '../../components'
 import FormFields from './FormFields'
-import QuoteItems from './DataGrid'
+import QuoteItems from './QuoteItems'
 import { useGet, usePost, usePut, useDelete } from '../../hooks/useApi'
 import { useFormik } from 'formik'
 import { object, string } from 'yup'
@@ -50,7 +52,61 @@ const validationSchema = object({
     status: string().required('Campo obrigatório'),
 })
 
-const serviceColumns = [
+const productBaseColumns = [
+    {
+        headerClassName: 'header',
+        field: 'number',
+        headerName: '#',
+        flex: 1,
+        valueFormatter: ({ value }) => {
+            return String(value).padStart(3, '0')
+        }
+    },
+    {
+        headerClassName: 'header',
+        field: 'product',
+        headerName: 'Produto',
+        editable: 'true',
+        flex: 8
+    },
+    {
+        headerClassName: 'header',
+        field: 'quantity',
+        headerName: 'Quantidade',
+        type: 'number',
+        editable: 'true',
+        flex: 1
+    }
+]
+
+const productExpandedColumns = [
+    {
+        headerClassName: 'header',
+        field: 'price',
+        headerName: 'Preço',
+        type: 'number',
+        editable: 'true',
+        flex: 2,
+        valueFormatter: ({ value }) => {
+            return Number(value).toLocaleString(undefined, { style: 'currency', currency: 'BRL' })
+        }
+    },
+    {
+        headerClassName: 'header',
+        field: 'totalPrice',
+        headerName: 'Preço Total',
+        type: 'number',
+        flex: 2,
+        valueGetter: (params) => {
+            return params.row.quantity * params.row.price
+        },
+        valueFormatter: ({ value }) => {
+            return Number(value).toLocaleString(undefined, { style: 'currency', currency: 'BRL' })
+        }
+    }
+]
+
+const serviceBaseColumns = [
     {
         headerClassName: 'header',
         field: 'number',
@@ -65,8 +121,19 @@ const serviceColumns = [
         field: 'service',
         headerName: 'Serviço',
         editable: 'true',
-        flex: 3
+        flex: 8
     },
+    {
+        headerClassName: 'header',
+        field: 'quantity',
+        headerName: 'Quantidade',
+        type: 'number',
+        editable: 'true',
+        flex: 1
+    }
+]
+
+const serviceExpandedColumns = [
     {
         headerClassName: 'header',
         field: 'price',
@@ -77,65 +144,71 @@ const serviceColumns = [
         valueFormatter: ({ value }) => {
             return Number(value).toLocaleString(undefined, { style: 'currency', currency: 'BRL' })
         }
+    },
+    {
+        headerClassName: 'header',
+        field: 'totalPrice',
+        headerName: 'Preço Total',
+        type: 'number',
+        flex: 2,
+        valueGetter: (params) => {
+            return params.row.quantity * params.row.price
+        },
+        valueFormatter: ({ value }) => {
+            return Number(value).toLocaleString(undefined, { style: 'currency', currency: 'BRL' })
+        }
     }
 ]
 
 function Quote() {
 
-    const productColumns = [
+    const productColumns = [...productBaseColumns]
+    if (useMediaQuery(useTheme().breakpoints.up('sm')))
+        productColumns.push(...productExpandedColumns)
+    const serviceColumns = [...serviceBaseColumns]
+    if (useMediaQuery(useTheme().breakpoints.up('sm')))
+        serviceColumns.push(...serviceExpandedColumns)
+
+    productColumns.push(
         {
+            field: 'actions',
+            type: 'actions',
+            headerName: '',
             headerClassName: 'header',
-            field: 'number',
-            headerName: '#',
-            flex: 1,
-            valueFormatter: ({ value }) => {
-                return String(value).padStart(3, '0')
+            flex: .1,
+            cellClassName: 'actions',
+            getActions: ({ id }) => {
+                return [
+                    <GridActionsCellItem
+                        icon={<DeleteIcon />}
+                        label="Delete"
+                        onClick={handleDeleteProduct(id)}
+                        color="inherit"
+                    />
+                ]
             }
-        },
-        {
-            headerClassName: 'header',
-            field: 'product',
-            headerName: 'Produto',
-            editable: 'true',
-            flex: 8
-        },
-        {
-            headerClassName: 'header',
-            field: 'quantity',
-            headerName: 'Quantidade',
-            type: 'number',
-            editable: 'true',
-            flex: 1
         }
-    ]
-    if (useMediaQuery(useTheme().breakpoints.up('sm'))) {
-        productColumns.push(
-            {
-                headerClassName: 'header',
-                field: 'price',
-                headerName: 'Preço',
-                type: 'number',
-                editable: 'true',
-                flex: 2,
-                valueFormatter: ({ value }) => {
-                    return Number(value).toLocaleString(undefined, { style: 'currency', currency: 'BRL' })
-                }
-            },
-            {
-                headerClassName: 'header',
-                field: 'totalPrice',
-                headerName: 'Preço Total',
-                type: 'number',
-                flex: 2,
-                valueGetter: (params) => {
-                    return params.row.quantity * params.row.price
-                },
-                valueFormatter: ({ value }) => {
-                    return Number(value).toLocaleString(undefined, { style: 'currency', currency: 'BRL' })
-                }
+    )
+    serviceColumns.push(
+        {
+            field: 'actions',
+            type: 'actions',
+            headerName: '',
+            headerClassName: 'header',
+            flex: .1,
+            cellClassName: 'actions',
+            getActions: ({ id }) => {
+                return [
+                    <GridActionsCellItem
+                        icon={<DeleteIcon />}
+                        label="Delete"
+                        onClick={handleDeleteService(id)}
+                        color="inherit"
+                    />
+                ]
             }
-        )
-    }
+        }
+    )
 
     const params = useParams()
     const navigate = useNavigate()
@@ -156,6 +229,17 @@ function Quote() {
         validationSchema: validationSchema,
         onSubmit: (values) => {
             setLoading(true)
+            // Overwrite temporary ids
+            values.products = values.products.map((row) => {
+                if (row.isNew === true)
+                    row.id = ''
+                return row
+            })
+            values.services = values.services.map((row) => {
+                if (row.isNew === true)
+                    row.id = ''
+                return row
+            })
             if (params.id !== ':new') {
                 putQuote(values)
                     .then(response => {
@@ -215,6 +299,42 @@ function Quote() {
         // eslint-disable-next-line
     }, [])
 
+    function addProduct() {
+        const maxNumber = formik.values.products.reduce((max, product) => (Math.max(max, product.number + 1)), 1)
+        const tempId = formik.values.products.reduce((max, product) => Math.max(max, product.id + 1), 1)
+        formik.setFieldValue('products', [
+            ...formik.values.products,
+            { id: tempId, number: maxNumber, product: '', quantity: '', price: '', isNew: true }
+        ])
+    }
+
+    function saveProducts(newRow) {
+        formik.setFieldValue('products', formik.values.products.map((row) => (row.id === newRow.id ? newRow : row)))
+        return newRow
+    }
+
+    const handleDeleteProduct = (id) => () => {
+        formik.setFieldValue('products', formik.values.products.filter((row) => row.id !== id))
+    }
+
+    function addService() {
+        const maxNumber = formik.values.services.reduce((max, service) => (Math.max(max, service.number + 1)), 1)
+        const tempId = formik.values.services.reduce((max, service) => (Math.max(max, service.id + 1)), 1)
+        formik.setFieldValue('services', [
+            ...formik.values.services,
+            { id: tempId, number: maxNumber, service: '', quantity: '', price: '', isNew: true }
+        ])
+    }
+
+    function saveServices(newRow) {
+        formik.setFieldValue('services', formik.values.services.map((row) => (row.id === newRow.id ? newRow : row)))
+        return newRow
+    }
+
+    const handleDeleteService = (id) => () => {
+        formik.setFieldValue('services', formik.values.services.filter((row) => row.id !== id))
+    }
+
     function handleDelete() {
         setLoading(true)
         deleteQuote()
@@ -251,10 +371,14 @@ function Quote() {
                         <QuoteItems
                             rows={formik.values.products}
                             columns={productColumns}
+                            processRowUpdate={saveProducts}
+                            clickNew={addProduct}
                         />
                         <QuoteItems
                             rows={formik.values.services}
                             columns={serviceColumns}
+                            processRowUpdate={saveServices}
+                            clickNew={addService}
                         />
                     </Grid>
                 </Box>
